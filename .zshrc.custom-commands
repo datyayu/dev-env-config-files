@@ -1,0 +1,66 @@
+google-chrome() {
+    open -a "Google Chrome" "$1"
+}
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+alias serve-prod="ember s --proxy=https://api.coachlogix.com --watcher=polling"
+alias serve-hot="ember s --proxy=https://hotapi.coachlogix.com --watcher=polling"
+alias serve-webdev="ember s --proxy=https://api2.coachlogix.com --watcher=polling"
+alias serve-pen="ember s --proxy=https://penapi.coachlogix.com --watcher=polling"
+alias serve-demo="ember s --proxy=https://demoapi.coachlogix.com --watcher=polling"
+
+clticket() {
+    google-chrome "https://coachlogix-app.atlassian.net/browse/$1"
+}
+
+webdev-merge() {
+    local branch="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)"
+    echo "merging ${branch} into webdev"
+    local merge="git fetch . ${branch}:webdev"
+    echo "${merge}"
+    eval "${merge}"
+    git push origin webdev
+}
+
+git-pull-all() {
+    echo "=================================="
+    echo "Pulling master..."
+    echo "=================================="
+    echo ""
+    git checkout master
+    git pull
+    echo ""
+    echo "=================================="
+    echo "Pulling develop..."
+    echo "=================================="
+    echo ""
+    git checkout develop
+    git pull
+    echo ""
+    echo "=================================="
+    echo "Pulling preprod..."
+    echo "=================================="
+    echo ""
+    git checkout preprod
+    git pull
+    echo ""
+    echo "=================================="
+    echo "Pulling webdev..."
+    echo "=================================="
+    echo ""
+    git checkout webdev
+    git pull
+    echo ""
+    echo "=================================="
+    echo "Setting branch to develop."
+    echo "=================================="
+    echo ""
+    git checkout develop
+    echo ""
+    echo "=================================="
+    echo "Sync completed."
+    echo "=================================="
+}
